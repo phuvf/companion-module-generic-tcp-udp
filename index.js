@@ -1,6 +1,7 @@
 import { InstanceBase, InstanceStatus, runEntrypoint, TCPHelper, UDPHelper } from '@companion-module/base'
 import { ConfigFields } from './config.js'
 import { getActionDefinitions } from './actions.js'
+import { udpServer } from './udpserver.js'
 
 class GenericTcpUdpInstance extends InstanceBase {
 	async init(config) {
@@ -34,7 +35,13 @@ class GenericTcpUdpInstance extends InstanceBase {
 			this.init_udp()
 
 			this.setVariableDefinitions([])
+			if (this.config.savemessage) {
+				this.setVariableDefinitions([{ name: 'Last UDP message', variableId: 'udp_message' }])
+				this.setVariableValues({ udp_message: '' })
+				udpServer.init(this);
+			}
 		}
+
 	}
 
 	async destroy() {
@@ -111,7 +118,7 @@ class GenericTcpUdpInstance extends InstanceBase {
 					} else if (this.config.convertresponse == 'hex') {
 						dataResponse = data.toString('hex')
 					}
-
+					
 					this.setVariableValues({ tcp_response: dataResponse })
 				}
 			})
@@ -121,9 +128,8 @@ class GenericTcpUdpInstance extends InstanceBase {
 	}
 
 	init_tcp_variables() {
-		this.setVariableDefinitions([{ name: 'Last TCP Response', variableId: 'tcp_response' }])
-
-		this.setVariableValues({ tcp_response: '' })
+		this.setVariableDefinitions([{ name: 'Last TCP response', variableId: 'tcp_response' },{ name: 'Last UDP message', variableId: 'udp_message' }])
+		this.setVariableValues({ tcp_response: '' ,udp_message: '' })
 	}
 }
 

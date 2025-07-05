@@ -9,27 +9,20 @@ export const ConfigFields = [
 		id: 'info',
 		label: 'Information',
 		width: 12,
-		value: `
-				<div class="alert alert-danger">
-					<h3>IMPORTANT MESSAGE</h3>
-					<div>
-						<strong>Please read and understand the following before using this module</strong>
-						<br>
-						The companion project is designed to make the everyday life of a technician easier.
-						We pefer to have ready made actions, presets and feedbacks for as many products as possible.<p>
-            This generic TCP/UDP module is intended for testing or small-scale products.
-						<ul>
-							<li>You shoudn't need to find, program and send raw TCP commands</li>
-							<li>If you have or use a product we don't support, please file a module request for it</li>
-							<li>Do you think your product/device is too insignificant to make a module for? It's probably not.</li>
-							<li>Properitary/inhouse products can also have their own modules.</li>
-							<li>With generic modules you won't get nice things like presets and feedback</li>
-						</ul>
-						<a href="https://github.com/bitfocus/companion-module-requests/issues" target="_new" class="btn btn-warning mr-1">See current requests</a>
-						<a href="https://github.com/bitfocus/companion-module-requests/issues/new" target="_new" class="btn btn-success">Request support for a product</a>
-					</div>
-				</div>
-			`,
+		value: `IMPORTANT MESSAGE\r\n
+\r\n
+Please read and understand the following before using this module\r\n
+\r\n
+The companion project is designed to make the everyday life of a technician easier.\r\n
+We pefer to have ready made actions, presets and feedbacks for as many products as possible.\r\n
+This generic TCP/UDP module is intended for testing or small-scale products.\r\n
+\r\n
+- You shoudn't need to find, program and send raw TCP commands\r\n
+- If you have or use a product we don't support, please file a module request for it\r\n
+- Do you think your product/device is too insignificant to make a module for? It's probably not.\r\n
+- Properitary/inhouse products can also have their own modules.\r\n
+- With generic modules you won't get nice things like presets and feedback\r\n
+\r\n`,
 	},
 	{
 		type: 'textinput',
@@ -51,6 +44,7 @@ export const ConfigFields = [
 		id: 'prot',
 		label: 'Connect with TCP / UDP',
 		default: 'tcp',
+		width: 6,
 		choices: [
 			{ id: 'tcp', label: 'TCP' },
 			{ id: 'udp', label: 'UDP' },
@@ -61,7 +55,26 @@ export const ConfigFields = [
 		id: 'saveresponse',
 		label: 'Save TCP Response',
 		default: false,
+		width: 6,
 		isVisible: (configValues) => configValues.prot === 'tcp',
+	},
+	{
+		type: 'checkbox',
+		id: 'savemessage',
+		label: 'Listen for UDP messages',
+		default: false,
+		width: 6,
+		isVisible: (configValues) => configValues.prot === 'udp',
+	},
+	{
+		type: 'textinput',
+		id: 'udpListenPort',
+		label: 'UDP listen port',
+		width: 4,
+		default: 7001,
+		regex: Regex.PORT,
+		width: 4,
+		isVisible: (configValues) => (configValues.prot === 'udp' && configValues.savemessage),
 	},
 	{
 		type: 'dropdown',
